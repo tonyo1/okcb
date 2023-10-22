@@ -41,7 +41,7 @@ namespace Name_Here.MVC.Controllers
             return View(Repository.Users.ToList());
         }
 
-        [Authorize]
+        [Authorize] 
         public IActionResult JsonView()
         {
             var tmp = Repository.Users.ToList();

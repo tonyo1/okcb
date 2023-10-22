@@ -16,8 +16,7 @@ namespace Name_Here.MVC
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("Users", policy =>
-                                  policy.RequireClaim("Role", "1", "2", "3", "4"));
+                options.AddPolicy("User", policy => policy.RequireClaim("User"));
             });
 
             builder.Services
@@ -26,7 +25,8 @@ namespace Name_Here.MVC
                       {
                           options.AccessDeniedPath = new PathString("/SignOn");
                           options.LoginPath = new PathString("/SignOn");
-                          options.LogoutPath = new PathString("/Home/SignOut");
+                          options.LogoutPath = new PathString("/SignOut");
+                         
                       })
                  .AddGoogle(googleOptions =>
                       {
