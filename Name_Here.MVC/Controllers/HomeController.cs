@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Name_Here.MVC.Models;
@@ -40,7 +41,7 @@ namespace Name_Here.MVC.Controllers
             return View(Repository.Users.ToList());
         }
 
-        [ClaimRequirementAttribute("one", "two")]
+        [Authorize] 
         public IActionResult JsonView()
         {
             var tmp = Repository.Users.ToList();

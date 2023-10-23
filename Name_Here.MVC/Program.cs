@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Claims;
@@ -15,17 +16,25 @@ namespace Name_Here.MVC
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("Users", policy =>
-                                  policy.RequireClaim("Role", "1", "2", "3", "4"));
+                options.AddPolicy("User", policy => policy.RequireClaim("User"));
             });
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                      .AddCookie(options =>
+            builder.Services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)    
+                .AddCookie(options =>
                       {
                           options.AccessDeniedPath = new PathString("/SignOn");
                           options.LoginPath = new PathString("/SignOn");
-                          options.LogoutPath = new PathString("/Home/SignOut");
+                          options.LogoutPath = new PathString("/SignOut");
+                         
+                      })
+                 .AddGoogle(googleOptions =>
+                      {
+                          googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                          googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                          googleOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                       });
+               
 
 
             var app = builder.Build();
