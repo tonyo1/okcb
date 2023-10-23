@@ -18,6 +18,3 @@ Three UI framework samples:
 	From the CMD Line in any of the "web proj directories": 
 	dotnet run
 
-
-
-
