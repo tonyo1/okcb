@@ -23,7 +23,7 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration MVC_Release
 
       - name: dotnet publish
         run: dotnet publish -c MVC_Release -o ${{env.DOTNET_ROOT}}/myapp
