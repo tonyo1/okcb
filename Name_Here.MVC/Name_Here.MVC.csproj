@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>35bc2f50-618f-4276-a2b3-6406cfb0036e</UserSecretsId>
@@ -10,14 +10,23 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.62.0.1869" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.12" />
     
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="7.0.13" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Name_Here.Cosmos\Name_Here.Cosmos.csproj" />
     <ProjectReference Include="..\Name_Here\Name_Here.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Cosmos.Identity">
+      <HintPath>..\..\Cosmos.Identity\src\Cosmos.Identity\bin\Debug\net6.0\Cosmos.Identity.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

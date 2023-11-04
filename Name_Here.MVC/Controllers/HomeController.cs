@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Cosmos.ModelBuilding;
+
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using Name_Here.MVC.Models;
+using Name_Here.Repositories;
 
+using System;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -12,14 +17,17 @@ namespace Name_Here.MVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        readonly AppDBContext _repo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, AppDBContext repo)
         {
+            this._repo = repo;
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+
             var claimsIdentity = (ClaimsIdentity)HttpContext.User.Identity;
             return View();
         }
@@ -41,7 +49,7 @@ namespace Name_Here.MVC.Controllers
             return View(Repository.Users.ToList());
         }
 
-        [Authorize] 
+        [Authorize]
         public IActionResult JsonView()
         {
             var tmp = Repository.Users.ToList();
@@ -50,12 +58,16 @@ namespace Name_Here.MVC.Controllers
             return View();
         }
 
-        public IActionResult ForceAuthenticate()
+        [Authorize]
+        public async Task< IActionResult> CosmoData()
         {
-            var identity = (ClaimsIdentity)Request.HttpContext.User.Identity;
-            identity.AddClaim(new Claim("one", "two"));
+            var tmp = _repo.AppUsers.ToList();
+            var tmp1 = tmp.Serialize();
+            ViewData["txt"] = tmp1;
 
-            return View("Index");
+            string? s = await  HttpContext.GetTokenAsync("AppUser");
+
+            return View("JsonView");
         }
     }
-} 
+}

@@ -1,3 +1,5 @@
+using Name_Here.Models;
+
 namespace Name_Here.Tests
 {
     public class SerilizerTest
@@ -5,13 +7,13 @@ namespace Name_Here.Tests
         [Fact]
         public void UserToJsonandBack()
         {
-            User testuser = new User { Email = "test1@gmail.com", Name = "test1", Role = Role.User };
+            AppUser testuser = new AppUser { Email = "test1@gmail.com", UserName = "test1", Role = Roles.Admin };
 
             string json = testuser.Serialize();
 
-            User testuser2 = json.Deserialize<User>();
+            AppUser testuser2 = json.Deserialize<AppUser>();
 
-            Assert.True(testuser.Name == testuser2.Name);
+            Assert.True(testuser.UserName == testuser2.UserName);
         }
     }
 }
