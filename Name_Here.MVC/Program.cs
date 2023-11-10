@@ -7,12 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 using Name_Here.Models;
-using Name_Here.Repositories;
-
-using System.Security.Claims;
-using Cosmos.Identity;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNet.Identity;
+ 
 using Cosmos.ModelBuilding;
 using Microsoft.AspNetCore.Authentication;
 
