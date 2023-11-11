@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Name_Here;
 using Name_Here.Models;
 
-namespace Cosmos.ModelBuilding;
+namespace Name_Here.Cosmos.ModelBuilding;
 
 public class AppDBContext : DbContext
 {
@@ -23,8 +23,8 @@ public class AppDBContext : DbContext
     #region Configuration
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseCosmos(accountEndpoint: config.AzureEndpoint,
-                accountKey:config.AzureSecret,
-                databaseName: config.AzureDBName); 
+                accountKey: config.AzureSecret,
+                databaseName: config.AzureDBName);
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,12 +39,12 @@ public class AppDBContext : DbContext
 
         appusers
             .HasDiscriminator(e => e.PartitionKey);
-           
-       
-        appusers 
-            .HasPartitionKey(o => o.Email)  
+
+
+        appusers
+            .HasPartitionKey(o => o.Email)
             .Property(d => d.ETag)
-            .IsETagConcurrency()         ;
+            .IsETagConcurrency();
 
         appusers.HasKey(e => e.Email);
 

@@ -1,10 +1,9 @@
-﻿using Cosmos.ModelBuilding;
-
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using Name_Here.Cosmos.ModelBuilding;
 using Name_Here.MVC.Models;
 using Name_Here.Repositories;
 
@@ -18,9 +17,11 @@ namespace Name_Here.MVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         readonly AppDBContext _repo;
+        readonly IConfiguration config;
 
-        public HomeController(ILogger<HomeController> logger, AppDBContext repo)
+        public HomeController(ILogger<HomeController> logger, AppDBContext repo, IConfiguration config)
         {
+            this.config = config;
             this._repo = repo;
             _logger = logger;
         }
@@ -60,7 +61,8 @@ namespace Name_Here.MVC.Controllers
 
         [Authorize]
         public async Task< IActionResult> CosmoData()
-        {
+        { 
+             
             var tmp = _repo.AppUsers.ToList();
             var tmp1 = tmp.Serialize();
             ViewData["txt"] = tmp1;

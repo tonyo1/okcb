@@ -1,15 +1,14 @@
-using Google;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
+using Name_Here.Cosmos;
 using Name_Here.Models;
- 
-using Cosmos.ModelBuilding;
-using Microsoft.AspNetCore.Authentication;
+using Name_Here.Repositories;
+using Name_Here.MVC;
+using Name_Here.Cosmos.ModelBuilding;
 
 namespace Name_Here.MVC
 {
@@ -18,6 +17,7 @@ namespace Name_Here.MVC
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("ContextConnection") ?? throw new InvalidOperationException("Connection string 'ContextConnection' not found.");
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -39,10 +39,11 @@ namespace Name_Here.MVC
                           googleOptions.Events.OnCreatingTicket = ctx =>
                           {
                               List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
-                              
+
                               tokens.Add(new AuthenticationToken()
                               {
                                   Name = "AppUser",
+                                  // this might be jenky, TODO find a better way
                                   Value = new AppUser().Serialize()
                               });
 
@@ -60,12 +61,19 @@ namespace Name_Here.MVC
                 AzureEndpoint = builder.Configuration["Authentication:Cosmos:accountEndpoint"],
                 AzureSecret = builder.Configuration["Authentication:Cosmos:accountKey"],
                 AzureDBName = builder.Configuration["Authentication:Cosmos:databaseName"]
-            });
-            builder.Services.AddScoped<AppDBContext>();
-            
 
-            var app = builder.Build(); 
-             
+            });
+
+
+            builder.Services.AddScoped<IRepository, CosmosRepo>();
+
+            builder.Services.AddScoped<AppDBContext>();
+ 
+     //       builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Context>();
+ 
+
+            var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

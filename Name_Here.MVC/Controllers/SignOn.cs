@@ -19,12 +19,10 @@ namespace Name_Here.MVC.Controllers
         [Route("google-login")]
         public IActionResult GoogleLogin()
         {
-            return new ChallengeResult(
-              GoogleDefaults.AuthenticationScheme,
-              new AuthenticationProperties
-              {
-                  RedirectUri = Url.Action(nameof(GoogleResponse))
-              });
+
+            var redirectUrl = "google-response";
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, "Google");
         }
 
         [Route("google-response")]
@@ -50,11 +48,7 @@ namespace Name_Here.MVC.Controllers
         public async Task<IActionResult> LogOut()
         { 
             await HttpContext.SignOutAsync();
-           
-
-            //  return LocalRedirect(returnUrl);
-
-            return Json("{Bye}");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

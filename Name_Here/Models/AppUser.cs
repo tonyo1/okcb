@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
+using System.Text.Json;
 namespace Name_Here.Models
 {
     /// <summary>
@@ -7,7 +8,7 @@ namespace Name_Here.Models
     /// be populated from some oauth provider, google microsoft etc.
     /// 
     /// the Role info will be managed by the application, (aka persisted somewhere safe)
-    /// </summary>
+    /// </summary> 
     public class AppUser : IdentityUser
     {
         public string PartitionKey { get; } = "AppUser";
