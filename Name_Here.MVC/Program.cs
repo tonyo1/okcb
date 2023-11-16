@@ -5,19 +5,22 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using Name_Here.Cosmos;
-using Name_Here.Models;
+using Name_Here.Models; 
 using Name_Here.Repositories;
-using Name_Here.MVC;
 using Name_Here.Cosmos.ModelBuilding;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Name_Here.MVC
 {
     public class Program
     {
-        public static void Main(string[] args)
+        static WebApplication app;
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var connectionString = builder.Configuration.GetConnectionString("ContextConnection") ?? throw new InvalidOperationException("Connection string 'ContextConnection' not found.");
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -36,20 +39,10 @@ namespace Name_Here.MVC
                           googleOptions.SaveTokens = true;
                           googleOptions.CallbackPath = "/google-response";
 
-                          googleOptions.Events.OnCreatingTicket = ctx =>
+                          googleOptions.Events.OnCreatingTicket = async ctx =>
                           {
-                              List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
-
-                              tokens.Add(new AuthenticationToken()
-                              {
-                                  Name = "AppUser",
-                                  // this might be jenky, TODO find a better way
-                                  Value = new AppUser().Serialize()
-                              });
-
-                              ctx.Properties.StoreTokens(tokens);
-
-                              return Task.CompletedTask;
+                              await ddd(ctx);
+                              
                           };
                       })
 ;
@@ -68,11 +61,13 @@ namespace Name_Here.MVC
             builder.Services.AddScoped<IRepository, CosmosRepo>();
 
             builder.Services.AddScoped<AppDBContext>();
- 
-     //       builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Context>();
- 
 
-            var app = builder.Build();
+            //       builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<AppDBContext>();
+            //      builder.Services.AddDbContext<AppDBContext>();
+
+
+            
+            app = builder.Build();
 
 
             // Configure the HTTP request pipeline.
@@ -96,7 +91,22 @@ namespace Name_Here.MVC
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.Run();
+          await  app.RunAsync();
+        }
+
+        static async Task<int> ddd(OAuthCreatingTicketContext ctx)
+        {
+            var scope = app.Services.CreateScope();
+
+            var repo = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
+         
+            ctx.Identity?.AddClaim(new Claim("Role", "99"));
+             
+
+            repo.Dispose();
+            scope.Dispose();
+            return await Task.FromResult(0);
         }
     }
 }

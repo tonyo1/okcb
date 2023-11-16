@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
+﻿using Microsoft.AspNetCore.Authentication.Cookies; 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +18,12 @@ namespace Name_Here.MVC.Controllers
         [Route("google-login")]
         public IActionResult GoogleLogin()
         {
-
+           
             var redirectUrl = "google-response";
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Challenge(new AuthenticationProperties { RedirectUri = "/" }, "Google");
         }
-
+            
         [Route("google-response")]
         public async Task<IActionResult> GoogleResponse()
         {

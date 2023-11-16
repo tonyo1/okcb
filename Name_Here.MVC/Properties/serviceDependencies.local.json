@@ -3,6 +3,10 @@
     "mssql1": {
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:ContextConnection"
+    },
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:Name_HereMVCContextConnection"
     }
   }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 
 using Name_Here.Cosmos.ModelBuilding;
 using Name_Here.MVC.Models;
@@ -61,7 +62,8 @@ namespace Name_Here.MVC.Controllers
 
         [Authorize]
         public async Task< IActionResult> CosmoData()
-        { 
+        {
+            var str = HttpContext.User.Claims;
              
             var tmp = _repo.AppUsers.ToList();
             var tmp1 = tmp.Serialize();
